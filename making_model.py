@@ -123,13 +123,13 @@ with tf.device('/GPU:0'):
                 # Convolutional layers
                 layers.Input(shape=(img_height, img_width, 3)),
                 normalization_layer,
-                layers.Conv2D(10,3, padding="same", activation="relu"), 
+                layers.Conv2D(10,3, padding="same", activation="softmax"), 
                 layers.MaxPooling2D(),
                 layers.MaxPooling2D(),
-                layers.Conv2D(10,3, padding="same", activation="relu"),
+                layers.Conv2D(10,3, padding="same", activation="softmax"),
                 layers.MaxPooling2D(),
                 layers.MaxPooling2D(),
-                layers.Conv2D(10,3, padding="same", activation="relu"),
+                layers.Conv2D(10,3, padding="same", activation="softmax"),
                 layers.MaxPooling2D(),
                 layers.MaxPooling2D(),
                 layers.MaxPooling2D(),
@@ -148,19 +148,19 @@ with tf.device('/GPU:0'):
 
 
         # time.sleep(3)
-        epochs = 30
+        epochs = 200
 
 
         history = model.fit(train_ds, validation_data=val_ds, epochs=epochs)
         
         model.save("model.h5")
-        predict_image("./TestImages/test-5.jpg", model)
-        predict_image("./TestImages/test-6.jpg", model)
+        predict_image("./TestImages/test-1.jpg", model)
+        predict_image("./TestImages/test-3.jpg", model)
         
     else:
         model = load_model('./model.h5')
+        predict_image("./TestImages/test-4.jpg", model)
         predict_image("./TestImages/test-5.jpg", model)
-        predict_image("./TestImages/test-6.jpg", model)
 
 # data_augmentation = keras.Sequential(
 #     [
