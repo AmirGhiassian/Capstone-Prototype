@@ -119,42 +119,48 @@ with tf.device('/GPU:0'):
             [
                 # Data Augmentation layers
          #       data_augmentation,
-                Rescaling(1.0 / 255, input_shape=(img_height, img_width, 3)),
+                #Rescaling(1.0 / 255, input_shape=(img_height, img_width, 3)),
                 # Convolutional layers
-                layers.Conv2D(10,3, padding="same", activation="relu", input_shape=(img_height, img_width, 3)),
+                layers.Input(shape=(img_height, img_width, 3)),
+                normalization_layer,
+                layers.Conv2D(10,3, padding="same", activation="relu"), 
+                layers.MaxPooling2D(),
                 layers.MaxPooling2D(),
                 layers.Conv2D(10,3, padding="same", activation="relu"),
                 layers.MaxPooling2D(),
+                layers.MaxPooling2D(),
                 layers.Conv2D(10,3, padding="same", activation="relu"),
+                layers.MaxPooling2D(),
+                layers.MaxPooling2D(),
                 layers.MaxPooling2D(),
                 # Dense layers
                 layers.Flatten(),
-                layers.Dense(10, activation="softmax"),
-                layers.Dense(num_classes),
+                #layers.Dense(128),
+                layers.Dense(num_classes, activation="softmax"),
             ]
         )
 
         model.compile(
             optimizer="adam",
-            loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+            loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
             metrics=["accuracy"],
         )
 
 
         # time.sleep(3)
-        epochs = 100
+        epochs = 30
 
 
         history = model.fit(train_ds, validation_data=val_ds, epochs=epochs)
         
         model.save("model.h5")
-        predict_image("./TestImages/test-3.jpg", model)
-        predict_image("./TestImages/test-1.jpg", model)
+        predict_image("./TestImages/test-5.jpg", model)
+        predict_image("./TestImages/test-6.jpg", model)
         
     else:
         model = load_model('./model.h5')
-        predict_image("./TestImages/test-1.jpg", model)
-        predict_image("./TestImages/test-3.jpg", model)
+        predict_image("./TestImages/test-5.jpg", model)
+        predict_image("./TestImages/test-6.jpg", model)
 
 # data_augmentation = keras.Sequential(
 #     [
