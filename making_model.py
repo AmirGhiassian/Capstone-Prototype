@@ -18,18 +18,15 @@ from tensorflow.keras import layers, Sequential
 
 def predict_image(image_path, model):
     # Load the image
-    # Change this to the path of your image
     image = Image.open(image_path)
 
-    # Preprocess the image
-    # Resize the image to match the input size expected by your model
+    # Image dimentions model will accept (will resisze if it is lower than this)
     img_height = 1280
     img_width = 720
     image = image.resize((img_width, img_height))
 
     # Convert the image to a NumPy array and normalize the pixel values
-    image_array = np.array(image) / 255.0  # Normalize pixel values to [0, 1]
-    # Add batch dimension
+    image_array = np.array(image) / 255.0
     image_array = np.expand_dims(image_array, axis=0)  # Add batch dimension
 
     # Make predictions
@@ -45,7 +42,9 @@ def predict_image(image_path, model):
     print("Predicted Class:", class_names[predicted_class])
     print("Confidence:", probabilities[predicted_class].numpy())
 #tf.function(experimental_relax_shapes=True)
+
 class_names = ''
+
 with tf.device('/GPU:0'):
     data_dir = pathlib.Path("bulk_barn_pics").with_suffix("")
     # image_count = len(list(data_dir.glob("*/*.heic")))
@@ -122,15 +121,15 @@ with tf.device('/GPU:0'):
          #       data_augmentation,
                 Rescaling(1.0 / 255, input_shape=(img_height, img_width, 3)),
                 # Convolutional layers
-                layers.Conv2D(16,3, padding="same", activation="relu", input_shape=(img_height, img_width, 3)),
+                layers.Conv2D(10,3, padding="same", activation="relu", input_shape=(img_height, img_width, 3)),
                 layers.MaxPooling2D(),
-                layers.Conv2D(32,3, padding="same", activation="relu"),
+                layers.Conv2D(10,3, padding="same", activation="relu"),
                 layers.MaxPooling2D(),
-                layers.Conv2D(64,3, padding="same", activation="relu"),
+                layers.Conv2D(10,3, padding="same", activation="relu"),
                 layers.MaxPooling2D(),
                 # Dense layers
                 layers.Flatten(),
-                layers.Dense(128, activation="relu"),
+                layers.Dense(10, activation="softmax"),
                 layers.Dense(num_classes),
             ]
         )
