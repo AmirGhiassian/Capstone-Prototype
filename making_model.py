@@ -153,12 +153,12 @@ with tf.device('/GPU:0'):
 
         history = model.fit(train_ds, validation_data=val_ds, epochs=epochs)
         
-        model.save("model.h5")
+        model.save("model.keras")
         predict_image("./TestImages/test-1.jpg", model)
         predict_image("./TestImages/test-3.jpg", model)
         
     else:
-        model = load_model('./model.h5')
+        model = load_model('./model.keras')
         predict_image("./TestImages/test-4.jpg", model)
         predict_image("./TestImages/test-5.jpg", model)
 
