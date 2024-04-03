@@ -100,7 +100,7 @@ with tf.device('/GPU:0'):
         base_model.trainable = False  # Freeze the convolutional base
         model = Sequential([
  base_model,
-    layers.GlobalAveragePooling3D(),
+    layers.GlobalAveragePooling2D(),
 layers.Dense(512, activation='relu'),
 layers.Dropout(0.5),
 layers.Dense(256, activation='relu'),
