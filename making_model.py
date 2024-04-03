@@ -10,41 +10,23 @@ from tensorflow.keras.layers import Rescaling, RandomFlip, RandomRotation, Rando
 from tensorflow.keras.callbacks import EarlyStopping
 import tensorflow as tf
 import pathlib
-
+from keras.applications.resnet50 import ResNet50
 
 from tensorflow import keras
 from tensorflow.keras import layers, Sequential
 
+model = ""
+def predict_image(image_path):
+    img = tf.keras.preprocessing.image.load_img('./TestImages/test-4.jpg', target_size=(img_height, img_width))
+    img_array = tf.keras.preprocessing.image.img_to_array(img)
+    img_array = np.array([img_array])
+    predictions = model.predict(img_array)
+    print(predictions)
 
-def predict_image(image_path, model):
-    # Load the image
-    image = Image.open(image_path)
+    class_id = np.argmax(predictions, axis = 1)
+    print(class_id)
 
-    # Image dimentions model will accept (will resisze if it is lower than this)
-    img_height = 1280
-    img_width = 720
-    image = image.resize((img_width, img_height))
-
-    # Convert the image to a NumPy array and normalize the pixel values
-    image_array = np.array(image) / 255.0
-    image_array = np.expand_dims(image_array, axis=0)  # Add batch dimension
-
-    # Make predictions
-    predictions = model.predict(image_array)
-
-    # Interpret the results
-    # Assuming your model outputs logits, you might want to apply softmax to get probabilities
-    probabilities = tf.nn.softmax(predictions[0])
-    # Get the predicted class index
-    predicted_class = np.argmax(probabilities)
-
-    # Print the predicted class and corresponding probability
-    print("Predicted Class:", class_names[predicted_class])
-    print("Confidence:", probabilities[predicted_class].numpy())
-#tf.function(experimental_relax_shapes=True)
-
-class_names = ''
-
+    print(class_names[class_id.item()]) 
 with tf.device('/GPU:0'):
     data_dir = pathlib.Path("bulk_barn_pics").with_suffix("")
     # image_count = len(list(data_dir.glob("*/*.heic")))
@@ -151,14 +133,4 @@ layers.Dense(num_classes, activation='softmax'),
         
     else:
         model = load_model('./model.keras')
-        
-        img = tf.keras.preprocessing.image.load_img('./TestImages/test-4.jpg', target_size=(img_height, img_width))
-        img_array = tf.keras.preprocessing.image.img_to_array(img)
-        img_array = np.array([img_array])
-        predictions = model.predict(img_array)
-        print(predictions)
-
-        class_id = np.argmax(predictions, axis = 1)
-        print(class_id)
-
-        print(class_names[class_id.item()])
+       
