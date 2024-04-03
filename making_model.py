@@ -100,8 +100,6 @@ with tf.device('/GPU:0'):
             ]
         )
 
-
-        # Set up the early stopping callback
         # early_stopping = EarlyStopping(
         #     monitor="val_loss",  # You can change this to 'val_accuracy' if you care more about accuracy
         #     patience=5,  # Number of epochs to wait after min has been hit. After this number of epochs without improvement, training stops.
@@ -114,7 +112,6 @@ with tf.device('/GPU:0'):
 
         num_classes = len(class_names)
         print(num_classes)
-<<<<<<< HEAD
         base_model = ResNet50(include_top=False,
                       weights='imagenet',
                       input_shape=(img_height, img_width, 3))
@@ -131,31 +128,6 @@ layers.Dropout(0.5),
 layers.Dense(64, activation='relu'),
 layers.Dropout(0.5),
 layers.Dense(num_classes, activation='softmax'),
-=======
-
-        model = Sequential(
-            [
-                # Data Augmentation layers
-         #       data_augmentation,
-                #Rescaling(1.0 / 255, input_shape=(img_height, img_width, 3)),
-                # Convolutional layers
-                layers.Input(shape=(img_height, img_width, 3)),
-                normalization_layer,
-                layers.Conv2D(10,3, padding="same", activation="softmax"), 
-                layers.MaxPooling2D(),
-                layers.MaxPooling2D(),
-                layers.Conv2D(10,3, padding="same", activation="softmax"),
-                layers.MaxPooling2D(),
-                layers.MaxPooling2D(),
-                layers.Conv2D(10,3, padding="same", activation="softmax"),
-                layers.MaxPooling2D(),
-                layers.MaxPooling2D(),
-                layers.MaxPooling2D(),
-                # Dense layers
-                layers.Flatten(),
-                #layers.Dense(128),
-                layers.Dense(num_classes, activation="softmax"),
->>>>>>> parent of 439bab5 (Model finished :))
             ]
         )
 
@@ -178,7 +150,6 @@ layers.Dense(num_classes, activation='softmax'),
         
     else:
         model = load_model('./model.keras')
-<<<<<<< HEAD
         
         img = tf.keras.preprocessing.image.load_img('./TestImages/test-4.jpg', target_size=(img_height, img_width))
         img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -191,11 +162,6 @@ layers.Dense(num_classes, activation='softmax'),
 
         print(class_names[class_id.item()])
 
-        
-=======
-        predict_image("./TestImages/test-4.jpg", model)
-        predict_image("./TestImages/test-5.jpg", model)
->>>>>>> parent of 439bab5 (Model finished :))
 
 # data_augmentation = keras.Sequential(
 #     [
