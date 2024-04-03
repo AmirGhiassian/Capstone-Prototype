@@ -126,7 +126,7 @@ with tf.device('/GPU:0'):
         base_model.trainable = False  # Freeze the convolutional base
         model = Sequential([
  base_model,
-    layers.GlobalAveragePooling2D(),
+    layers.GlobalAveragePooling3D(),
 layers.Dense(512, activation='relu'),
 layers.Dropout(0.5),
 layers.Dense(256, activation='relu'),
@@ -167,7 +167,7 @@ layers.Dense(num_classes, activation='softmax'),
     else:
         model = load_model('./model.keras')
         
-        img = tf.keras.preprocessing.image.load_img('./TestImages/test-5.jpg', target_size=(img_height, img_width))
+        img = tf.keras.preprocessing.image.load_img('./TestImages/test-4.jpg', target_size=(img_height, img_width))
         img_array = tf.keras.preprocessing.image.img_to_array(img)
         img_array = np.array([img_array])
         predictions = model.predict(img_array)
