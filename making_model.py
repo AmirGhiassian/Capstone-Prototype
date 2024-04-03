@@ -10,10 +10,6 @@ from tensorflow.keras.layers import Rescaling, RandomFlip, RandomRotation, Rando
 from tensorflow.keras.callbacks import EarlyStopping
 import tensorflow as tf
 import pathlib
-from tensorflow.keras.applications import ResNet50
-
-
-
 
 
 from tensorflow import keras
@@ -25,8 +21,8 @@ def predict_image(image_path, model):
     image = Image.open(image_path)
 
     # Image dimentions model will accept (will resisze if it is lower than this)
-    img_height = 600
-    img_width = 600
+    img_height = 1280
+    img_width = 720
     image = image.resize((img_width, img_height))
 
     # Convert the image to a NumPy array and normalize the pixel values
@@ -61,8 +57,8 @@ with tf.device('/GPU:0'):
 
 
     batch_size = 16
-    img_height = 600
-    img_width = 600
+    img_height = 1280
+    img_width = 720
 
 
     train_ds = tf.keras.utils.image_dataset_from_directory(
@@ -93,16 +89,14 @@ with tf.device('/GPU:0'):
     train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
     val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 # ---------------------------------------------
-
-    if(not pathlib.Path("./model.keras").is_file()):
+    if(not pathlib.Path("./model.h5").is_file()):
         
        #  Define the data augmentation model
         data_augmentation = Sequential(
             [
-                layers.RandomFlip("horizontal_and_vertical"),
-                layers.RandomRotation(0.2),
-                layers.RandomZoom(0.1),
-                layers.RandomContrast(0.1),
+                RandomFlip("horizontal"),
+                RandomRotation(0.1),
+                RandomZoom(0.2),
             ]
         )
 
@@ -116,10 +110,11 @@ with tf.device('/GPU:0'):
         #     restore_best_weights=True,  # This rolls back the model weights to those of the epoch with the best value of the monitored metric.
         # )
 
-       
+        normalization_layer = layers.Rescaling(1.0 / 255)
 
         num_classes = len(class_names)
         print(num_classes)
+<<<<<<< HEAD
         base_model = ResNet50(include_top=False,
                       weights='imagenet',
                       input_shape=(img_height, img_width, 3))
@@ -136,36 +131,54 @@ layers.Dropout(0.5),
 layers.Dense(64, activation='relu'),
 layers.Dropout(0.5),
 layers.Dense(num_classes, activation='softmax'),
+=======
+
+        model = Sequential(
+            [
+                # Data Augmentation layers
+         #       data_augmentation,
+                #Rescaling(1.0 / 255, input_shape=(img_height, img_width, 3)),
+                # Convolutional layers
+                layers.Input(shape=(img_height, img_width, 3)),
+                normalization_layer,
+                layers.Conv2D(10,3, padding="same", activation="softmax"), 
+                layers.MaxPooling2D(),
+                layers.MaxPooling2D(),
+                layers.Conv2D(10,3, padding="same", activation="softmax"),
+                layers.MaxPooling2D(),
+                layers.MaxPooling2D(),
+                layers.Conv2D(10,3, padding="same", activation="softmax"),
+                layers.MaxPooling2D(),
+                layers.MaxPooling2D(),
+                layers.MaxPooling2D(),
+                # Dense layers
+                layers.Flatten(),
+                #layers.Dense(128),
+                layers.Dense(num_classes, activation="softmax"),
+>>>>>>> parent of 439bab5 (Model finished :))
             ]
         )
 
         model.compile(
             optimizer="adam",
-            loss="sparse_categorical_crossentropy",
+            loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
             metrics=["accuracy"],
         )
 
 
         # time.sleep(3)
-        epochs = 36
+        epochs = 200
 
 
         history = model.fit(train_ds, validation_data=val_ds, epochs=epochs)
         
         model.save("model.keras")
+        predict_image("./TestImages/test-1.jpg", model)
+        predict_image("./TestImages/test-3.jpg", model)
         
-        img = tf.keras.preprocessing.image.load_img('./TestImages/test-1.jpg', target_size=(img_height, img_width))
-        img_array = tf.keras.preprocessing.image.img_to_array(img)
-        img_array = np.array([img_array])
-        predictions = model.predict(img_array)
-        print(predictions)
-
-        class_id = np.argmax(predictions, axis = 1)
-        print(class_id)
-
-        print(class_names[class_id.item()])
     else:
         model = load_model('./model.keras')
+<<<<<<< HEAD
         
         img = tf.keras.preprocessing.image.load_img('./TestImages/test-4.jpg', target_size=(img_height, img_width))
         img_array = tf.keras.preprocessing.image.img_to_array(img)
@@ -179,6 +192,10 @@ layers.Dense(num_classes, activation='softmax'),
         print(class_names[class_id.item()])
 
         
+=======
+        predict_image("./TestImages/test-4.jpg", model)
+        predict_image("./TestImages/test-5.jpg", model)
+>>>>>>> parent of 439bab5 (Model finished :))
 
 # data_augmentation = keras.Sequential(
 #     [
