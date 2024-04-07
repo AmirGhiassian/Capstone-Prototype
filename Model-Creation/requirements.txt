@@ -106,7 +106,7 @@ ssh-import-id==5.11
 systemd-python==234
 tensorboard==2.15.2
 tensorboard-data-server==0.7.2
-# tensorflow @ file:///home/amir/tensorflow-2.15.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+tensorflow @ file:///home/amir/tensorflow-2.15.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 tensorflow-estimator==2.15.0
 tensorflow-io-gcs-filesystem==0.36.0
 termcolor==2.4.0
