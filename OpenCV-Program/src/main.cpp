@@ -25,13 +25,13 @@ int main()
 
         imshow("Frame", frame);
 
-        char c = (char)waitKey(25);
-        if (c == 27)
-            break;
+        // char c = (char)waitKey(25);
+        // if (c == 27)
+        //     break;
     }
 
     imshow("Frame", frame);
-    waitKey(0);
+    waitKey();
 
     return 0;
 }
